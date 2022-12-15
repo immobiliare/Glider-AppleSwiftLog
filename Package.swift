@@ -12,6 +12,7 @@ let package = Package(
         .library(name: "GliderSwiftLog", targets: ["GliderSwiftLog"])
     ],
     dependencies: [
+        .package(url: "https://github.com/immobiliare/Glider.git", .upToNextMajor(from: "2.0.0")),
         .package(url: "https://github.com/apple/swift-log.git", from: "1.4.2")
     ],
     targets: [

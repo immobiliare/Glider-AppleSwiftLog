@@ -1,7 +1,7 @@
 <p align="center">
 <picture>
-  <source media="(prefers-color-scheme: dark)" srcset="./Documentation/assets/glider-swiftlog-dark.png" width="350">
-  <img alt="logo-library" src="./Documentation/assets/glider-swiftlog-light.png" width="350">
+  <source media="(prefers-color-scheme: dark)" srcset="./Documentation/assets/glider-sentry-dark.png" width="350">
+  <img alt="logo-library" src="./Documentation/assets/glider-sentry-light.png" width="350">
 </picture>
 </p>
 
@@ -23,17 +23,36 @@ See the [project's page on GitHub for more informations](https://github.com/immo
 
 # Glider-SwiftLog
 
-Glider can also work as a backend for [apple/swift-log](https://github.com/apple/swift-log/).  
+Glider-Sentry is a third party package to connect your Sentry iOS SDK as transport for Glider Logging.  
+It uses the official [`sentry-cocoa`](https://github.com/getsentry/sentry-cocoa) library as backend and it's maintained by the core team of Glider.
 
-The `GliderSwiftLogHandler` offers a `LogHandler` object which you can assign to the swift-log settings to use Glider as the backend:
+# How it works
+
+Once you have integrated Glider in your project you can install this dependency.  
+It exposes a new transport called `GliderSentryTransport`; it's used to forward log messages coming from `Glider` logging system to the [Sentry](https://github.com/getsentry/sentry-cocoa) SDK.  
+When you install this package, `sentry-cocoa` is a dependency.
 
 ```swift
-LoggingSystem.bootstrap {
-    var handler = GliderSwiftLogHandler(label: loggerName, logger: gliderLogger)
-    handler.logLevel = .trace
-    return handler
+let sentryTransport = GliderSentryTransport {
+    // If you have not initialized the Sentry SDK yet you can pass a valid
+    // `sdkConfiguration` here and the lib will do it for you.
+    $0.sdkConfiguration = { ... }
+    $0.environment = "MyApp-Production" // set the sentry environment
+}
+
+let logger = Log {
+    $0.level = .info
+    $0.transports = [sentryTransport]
+    $0.extra = [...] // extras are sent automatically as sentry's extras
+    $0.tags = [...] // tags are sent automatically as sentry's tags
 }
 ```
+
+All the relevants infos set using Glider are also forwarded automatically to the Sentry SDK. It includes:
+- global Glider's `user` property set via `GliderSDK.shared.scope.user`
+- `environment` variable set on `GliderSentryTransport`'s instance
+- log message's `extra` dictionary
+- log message's `tags` dictionary
 
 # Install
 
@@ -48,12 +67,24 @@ Once you have your Swift package set up, adding Glider as a dependency is as eas
 
 ```swift
 dependencies: [
-    .package(url: "https://github.com/immobiliare/Glider-AppleSwiftLog.git")
+    .package(url: "https://github.com/immobiliare/Glider-Sentry")
 ]
 ```
 
 Manifest also includes third-party packages for other transports, like ELK or Sentry.  
 The Glider core SDK is the `Glider` package.
+
+## CocoaPods
+
+CocoaPods is a dependency manager for Cocoa projects.  
+To integrate Glider into your project, specify it in your Podfile:
+
+```ruby
+source 'https://github.com/CocoaPods/Specs.git'
+use_frameworks!
+
+pod 'GliderSentry'
+```
 
 ## Requirements
 
