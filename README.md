@@ -1,7 +1,7 @@
 <p align="center">
 <picture>
-  <source media="(prefers-color-scheme: dark)" srcset="./Documentation/assets/glider-sentry-dark.png" width="350">
-  <img alt="logo-library" src="./Documentation/assets/glider-sentry-light.png" width="350">
+  <source media="(prefers-color-scheme: dark)" srcset="./Documentation/assets/glider-swiftlog-dark.png" width="350">
+  <img alt="logo-library" src="./Documentation/assets/glider-swiftlog-light.png" width="350">
 </picture>
 </p>
 
